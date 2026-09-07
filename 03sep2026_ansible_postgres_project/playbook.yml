@@ -1,0 +1,31 @@
+---
+- name: ansible tutorial
+  hosts: ansible postgres
+  gather_facts: yes
+  vars:
+    db_name: "pune"
+  tasks:
+    - name: Query database for active users
+      community.postgresql.postgresql_query:
+        db: "{{db_name}}"
+        query: "{{ lookup('ansible.builtin.file', 'query.sql') }}"
+      become: true
+      become_user: postgres
+      register: db_query_out
+
+    - name: output 
+      ansible.builtin.debug:
+        var: db_query_out.query_result
+
+    - name: fetch table detail
+      community.postgresql.postgresql_query:
+        db: "{{db_name}}"
+        query:
+          - "select * from pune_user.pune_city;"
+      become: true
+      become_user: postgres
+      register: table_detail
+
+    - name: show table detail
+      ansible.builtin.debug:
+        var: table_detail.query_result

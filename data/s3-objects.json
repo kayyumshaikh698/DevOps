@@ -1,0 +1,35 @@
+{
+  "000000000000/s3-bucket/Gemini_Generated_Image_xivufrxivufrxivu.png" : {
+    "bucketName" : "s3-bucket",
+    "key" : "Gemini_Generated_Image_xivufrxivufrxivu.png",
+    "metadata" : { },
+    "contentType" : "image/png",
+    "contentEncoding" : null,
+    "contentDisposition" : null,
+    "cacheControl" : null,
+    "serverSideEncryption" : null,
+    "sseCustomerAlgorithm" : null,
+    "sseCustomerKeyMd5" : null,
+    "size" : 1968069,
+    "lastModified" : "2026-09-05T16:29:24.924Z",
+    "storageClass" : "STANDARD",
+    "checksum" : {
+      "checksumCRC32" : "qYeRWA==",
+      "checksumCRC32C" : null,
+      "checksumCRC64NVME" : null,
+      "checksumSHA1" : null,
+      "checksumSHA256" : null,
+      "checksumType" : "FULL_OBJECT"
+    },
+    "parts" : [ ],
+    "versionId" : null,
+    "deleteMarker" : false,
+    "tags" : { },
+    "objectLockMode" : null,
+    "retainUntilDate" : null,
+    "legalHoldStatus" : null,
+    "acl" : null,
+    "latest" : true,
+    "etag" : "\"96a30696d545298a1586f0c3b4c41154\""
+  }
+}

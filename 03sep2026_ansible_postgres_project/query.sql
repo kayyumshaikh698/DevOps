@@ -1,0 +1,10 @@
+CREATE SCHEMA IF NOT EXISTS PUNE_USER;
+CREATE TABLE IF NOT EXISTS PUNE_USER.PUNE_CITY(ID SERIAL PRIMARY KEY, NAME VARCHAR(200) UNIQUE);
+insert into pune_user.pune_city(name) values ('hadapsar') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('yerwada') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('ranjangao') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('bekhrai nagar') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('swargate') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('shivaji nagar') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('pimpri chinchwad') ON CONFLICT (name) DO NOTHING;
+insert into pune_user.pune_city(name) values ('kalyani nagar') ON CONFLICT (name) DO NOTHING;

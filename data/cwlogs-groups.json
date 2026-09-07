@@ -1,0 +1,18 @@
+{
+  "000000000000/us-east-1::/aws/rds/instance/my-postgres-db/error" : {
+    "logGroupName" : "/aws/rds/instance/my-postgres-db/error",
+    "createdTime" : 1788624930377,
+    "retentionInDays" : null,
+    "deletionProtectionEnabled" : false,
+    "kmsKeyId" : null,
+    "tags" : { }
+  },
+  "000000000000/us-east-1::/floci/ui" : {
+    "logGroupName" : "/floci/ui",
+    "createdTime" : 1788625648079,
+    "retentionInDays" : null,
+    "deletionProtectionEnabled" : false,
+    "kmsKeyId" : null,
+    "tags" : { }
+  }
+}

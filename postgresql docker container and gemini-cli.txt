@@ -1,0 +1,130 @@
+kayyum@debian:~/Downloads$ docker pull postgres:14.22-trixie
+14.22-trixie: Pulling from library/postgres
+153009a9cdfd: Pull complete
+ca4ab6672eaf: Pull complete
+57fb71246055: Pull complete
+b6f1a07cadde: Pull complete
+7e9d04c6474d: Pull complete
+ce5982a93518: Pull complete
+5b3d89668c21: Pull complete
+5667b577fab5: Pull complete
+008809ed679c: Pull complete
+8b1ecaf4ddf1: Pull complete
+2425e23e1993: Pull complete
+0b5be715dc73: Pull complete
+1cc2243d61af: Pull complete
+04a8c43de120: Pull complete
+ed366a4613c2: Download complete
+42b9afccc49b: Download complete
+Digest: sha256:eba8ddbdd837ecfbb6ca8a26d8deec68a2f9b076660102ae641dba0f371c099b
+Status: Downloaded newer image for postgres:14.22-trixie
+docker.io/library/postgres:14.22-trixie
+kayyum@debian:~/Downloads$ docker image ls
+                                                                                                    i Info →   U  In Use
+IMAGE                   ID             DISK USAGE   CONTENT SIZE   EXTRA
+debian:latest           e2d08da6f42e        186MB         52.5MB
+hello-world:latest      f9078146db2e       25.9kB         9.49kB
+postgres:14.22-trixie   eba8ddbdd837        628MB          163MB
+kayyum@debian:~/Downloads$ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres:14.22-trixie
+bcb4886e70ad8d954d74f5e05f4150840e259625098776f5b43e4596d0b891ba
+kayyum@debian:~/Downloads$ docker ps
+CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS         PORTS      NAMES
+bcb4886e70ad   postgres:14.22-trixie   "docker-entrypoint.s…"   5 seconds ago   Up 3 seconds   5432/tcp   some-postgres
+
+kayyum@debian:~/Downloads$ docker exec -it -u postgres some-postgres psql -U postgres
+
+### to run psql from Debian host to postgres docker container db needs client ####
+kayyum@debain:~/Downloads$ sudo apt update
+sudo apt install -y postgresql-client
+
+docker exec -it some-postgres psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'my_new_password';"
+
+psql -h $(ip route get 1 | awk '{print $7;exit}') -U postgres -d postgres
+
+
+postgres=# -- Create schema owned by a specific user
+CREATE SCHEMA yerwada AUTHORIZATION kayyum;
+CREATE SCHEMA
+postgres=# 
+postgres=# \dn
+       List of schemas
+  Name   |       Owner       
+---------+-------------------
+ public  | pg_database_owner
+ yerwada | kayyum
+(2 rows)
+
+
+-- select datname,session_time,active_time,sessions,xact_commit from pg_stat_database where datname='pune';
+create view pune_city.pg_stat_database as 
+select * from (select datname,session_time,active_time,sessions,xact_commit from pg_stat_database where datname='pune');
+
+
+*** best query for Grafana for postgres  monitoring alert ****
+SELECT
+  NOW() AS time,
+  datid,
+  datname AS metric,
+  numbackends AS active_sessions
+FROM
+  pg_catalog.pg_stat_database
+WHERE
+  datname IS NOT NULL 
+
+
+SELECT
+  NOW() AS time,
+  datid,
+  xact_commit as commits,
+  datname AS metric
+FROM
+  pg_catalog.pg_stat_database
+WHERE
+  datname IS NOT NULL 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT
+  NOW() AS time,
+  datid,
+  datname AS metric,
+  numbackends,
+  xact_commit,
+  xact_rollback,
+  blks_read,
+  blks_hit,
+  tup_returned,
+  tup_fetched,
+  tup_inserted,
+  tup_updated,
+  tup_deleted,
+  conflicts,
+  temp_files,
+  temp_bytes,
+  deadlocks,
+  checksum_failures,
+  checksum_last_failure,
+  blk_read_time,
+  blk_write_time,
+  session_time,
+  active_time,
+  idle_in_transaction_time,
+  sessions,
+  sessions_fatal,
+  sessions_killed,
+  stats_reset
+FROM
+  pg_catalog.pg_stat_database
+WHERE
+  datname IS NOT NULL;

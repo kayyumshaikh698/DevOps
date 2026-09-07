@@ -1,0 +1,27 @@
+
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins
+    restart: on-failure
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    
+    command: >
+      bash -c "
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python3-pip python3-venv -y &&
+      tail -f /dev/null 
+      "
+
+volumes:
+  jenkins_home:
+
+# to change utc to ist 
+# root: ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
+# echo "$(date +'%d_%m_%Y %H:%M:%S %r' )"

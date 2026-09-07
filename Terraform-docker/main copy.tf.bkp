@@ -1,0 +1,29 @@
+terraform {
+  required_version = ">= 1.0"
+
+  required_providers {
+    null = {
+      source  = "hashicorp/null"
+    }
+  }
+}
+
+resource "null_resource" "docker_compose" {
+  # Re-run when postgres.yml changes
+  triggers = {
+    compose_hash = filemd5("${path.module}/postgres_ansible_compose.yml")
+  }
+
+  # Start containers on apply
+  provisioner "local-exec" {
+    command     = "docker compose -f postgres_ansible_compose.yml up -d"
+    working_dir = path.module
+  }
+
+  # Stop and remove containers on destroy
+  provisioner "local-exec" {
+    when        = destroy
+    command     = "docker compose -f postgres_ansible_compose.yml down"
+    working_dir = path.module
+  }
+}

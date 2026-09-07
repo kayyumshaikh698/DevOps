@@ -1,0 +1,25 @@
+---
+- name: Ansible tutorial handson
+  hosts: ansible postgres
+  gather_facts: yes
+  tasks:
+
+    - name: postgres stopping cluster
+      ansible.builtin.shell:  
+         cmd: pg_ctlcluster 16 ansibledb stop 
+         executable: /bin/bash 
+
+    - name: postgres dropping new cluster 
+      ansible.builtin.shell:
+         cmd: pg_dropcluster 16 ansibledb
+         executable: /bin/bash 
+    
+    - name: create cluster o/p 
+      ansible.builtin.shell:
+        cmd: pg_lsclusters 
+        executable: /bin/bash
+      register: pg_output 
+
+    - name: postgres status o/p
+      ansible.builtin.debug:
+        var: pg_output.stdout_lines

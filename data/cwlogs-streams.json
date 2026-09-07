@@ -1,0 +1,22 @@
+{
+  "000000000000/us-east-1::/floci/ui::2026/09/05/aa9f20f6" : {
+    "logGroupName" : "/floci/ui",
+    "logStreamName" : "2026/09/05/aa9f20f6",
+    "createdTime" : 1788625648079,
+    "firstEventTimestamp" : 1788625648527,
+    "lastEventTimestamp" : 1788626213370,
+    "lastIngestionTime" : 1788626213370,
+    "uploadSequenceToken" : "24bd066e-bed2-45be-8cbc-8a4efb95ce98",
+    "storedBytes" : 47042
+  },
+  "000000000000/us-east-1::/aws/rds/instance/my-postgres-db/error::2026/09/05/c569fdbc" : {
+    "logGroupName" : "/aws/rds/instance/my-postgres-db/error",
+    "logStreamName" : "2026/09/05/c569fdbc",
+    "createdTime" : 1788624930378,
+    "firstEventTimestamp" : 1788624930384,
+    "lastEventTimestamp" : 1788625378367,
+    "lastIngestionTime" : 1788625378367,
+    "uploadSequenceToken" : "a612523a-9b8f-4d44-9c31-69a32959c8f6",
+    "storedBytes" : 5921
+  }
+}

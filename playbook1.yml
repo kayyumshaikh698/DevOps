@@ -1,0 +1,71 @@
+---
+- name: Ansible tutorial handson
+  hosts: ansible postgres
+  gather_facts: yes
+  tasks:
+
+    - name: Insert row into table
+      community.postgresql.postgresql_query:
+        db: pune
+        query: 
+          - "CREATE TABLE IF NOT EXISTS pune_user.pune_table(id serial primary key, name varchar(200) UNIQUE);"
+          - "insert into pune_user.pune_table(name) values ('hadapsar') ON CONFLICT (name) DO NOTHING;"
+          - "insert into pune_user.pune_table(name) values ('yerwada') ON CONFLICT (name) DO NOTHING;"
+      become: true
+      become_user: postgres
+
+    - name: fetch data 
+      community.postgresql.postgresql_query:
+        db: pune
+        query:
+          - "select * from pune_user.pune_table;"
+      become: true
+      become_user: postgres 
+      register: pg_output
+
+    - name: show data o/p
+      ansible.builtin.debug:
+        var: pg_output.query_result
+
+    - name: update rows on postgres 
+      community.postgresql.postgresql_query:
+        db: pune
+        query:
+          - "update pune_user.pune_table set name='magarpatta' where id=1;"
+          - "update pune_user.pune_table set name='fatima nagar' where id=2;"
+      become: true
+      become_user: postgres
+
+    - name: fetch data after update
+      community.postgresql.postgresql_query:
+        db: pune
+        query:
+          - "select * from pune_user.pune_table;"
+      become: true
+      become_user: postgres
+      register: update_output
+
+    - name: show data o/p after update
+      ansible.builtin.debug:
+        var: update_output.query_result
+
+    - name: delete rows on postgres 
+      community.postgresql.postgresql_query:
+        db: pune
+        query:
+          - "delete from pune_user.pune_table where id=1;"
+      become: true
+      become_user: postgres
+
+    - name: fetch data after delete
+      community.postgresql.postgresql_query:
+        db: pune
+        query:
+          - "select * from pune_user.pune_table;"
+      become: true
+      become_user: postgres
+      register: delete_output
+
+    - name: show data o/p after delete
+      ansible.builtin.debug:
+        var: delete_output.query_result

@@ -1,0 +1,27 @@
+{
+  "000000000000/s3-bucket" : {
+    "name" : "s3-bucket",
+    "creationDate" : "2026-09-05T16:29:15.571516530Z",
+    "versioningStatus" : null,
+    "loggingConfiguration" : null,
+    "tags" : { },
+    "notificationConfiguration" : null,
+    "objectLockEnabled" : false,
+    "defaultRetention" : null,
+    "policy" : null,
+    "corsConfiguration" : null,
+    "lifecycleConfiguration" : null,
+    "transitionDefaultMinimumObjectSize" : null,
+    "acl" : null,
+    "encryptionConfiguration" : null,
+    "replicationConfiguration" : null,
+    "publicAccessBlockConfiguration" : null,
+    "ownershipControlsConfiguration" : null,
+    "requestPaymentPayer" : null,
+    "accelerateStatus" : null,
+    "region" : "us-east-1",
+    "websiteConfiguration" : null,
+    "metricsConfigurations" : null,
+    "versioningEnabled" : false
+  }
+}

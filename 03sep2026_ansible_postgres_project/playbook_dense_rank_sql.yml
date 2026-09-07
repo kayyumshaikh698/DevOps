@@ -1,0 +1,19 @@
+---
+- name: ansible sample
+  hosts: ansible postgres
+  gather_facts: yes
+  tasks:
+    - name: postgres 
+      community.postgresql.postgresql_query:
+        db: pune
+        query: |- 
+           select * from (
+           select first_name,last_name,email, salary,
+           dense_rank() over (partition by department order by salary desc) as rnk
+           from pune_user.employees) 
+           where rnk=3;
+      register: output
+
+    - name: output
+      ansible.builtin.debug:
+        var: output.query_result

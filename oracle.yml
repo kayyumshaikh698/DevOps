@@ -1,0 +1,16 @@
+services:
+  oracle:
+    image: oraclelinux:8.10
+    container_name: oracle
+    hostname: oracle 
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+      - "2222:22"
+    command: >
+      bash -c '
+      dnf update -y &&
+      
+      tail -f /dev/null 
+      '
