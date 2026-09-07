@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: postgres
+    hostname: postgres 
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+      - "2222:22"
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server software-properties-common postgresql postgresql-contrib postgresql-server-dev-all libpq-dev && 
+      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      echo "kayyum:k" | chpasswd && 
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      service postgresql start && 
+      echo "listen_addresses = '\''*'\''" >> /etc/postgresql/16/main/postgresql.conf && 
+      echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/16/main/pg_hba.conf && 
+      service postgresql restart && 
+      su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD '\''k'\'';\"" && 
+      su - postgres -c "psql -c \"CREATE DATABASE PUNE;\"" &&
+      su - postgres -c "psql -U postgres -d pune -c \"CREATE SCHEMA pune_user;\"" &&
+      tail -f /dev/null
+      '
+
+  ansible:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: ansible
+    hostname: ansible 
+    tty: true
+    restart: unless-stopped
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server software-properties-common python-is-python3 sudo python3-psycopg2 && 
+      add-apt-repository --yes --update ppa:ansible/ansible && 
+      apt install -y ansible && 
+      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      echo "kayyum:k" | chpasswd && 
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      tail -f /dev/null
+      '
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins
+    restart: on-failure
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      - "2224:22"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+volumes:
+  jenkins_home:
+
+# in jenkins after docker container ready to use do below things
+# useradd -m kayyum; passwd kayyum ---> k
+# useradd -m postgres; passwd postgres --> k ; apt update -y ; 
+# apt install -y iputils-ping vim curl wget net-tools openssh-server
+# root# service ssh start 
