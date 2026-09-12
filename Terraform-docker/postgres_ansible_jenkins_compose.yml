@@ -5,15 +5,27 @@ services:
     hostname: postgres 
     tty: true
     restart: unless-stopped
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Kolkata 
     ports:
       - "5432:5432"
       - "2222:22"
+    volumes:
+      - postgres_data:/var/lib/postgresql
     command: >
       bash -c '
+      sed -i "s|http://|https://|g" /etc/apt/sources.list.d/* &&
       apt-get update -y && 
-      apt-get install -y iputils-ping vim curl wget net-tools openssh-server software-properties-common postgresql postgresql-contrib postgresql-server-dev-all libpq-dev && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev && 
       id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      id -u jenkins >/dev/null 2>&1 || useradd -m -s /bin/bash jenkins &&
+      id -u postgres >/dev/null 2>&1 || useradd -m -s /bin/bash postgres &&
       echo "kayyum:k" | chpasswd && 
+      echo "jenkins:k" | chpasswd &&
+      echo "postgres:k" | chpasswd &&
+      echo "postgres ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/postgres-policy &&
+      chmod 440 /etc/sudoers.d/postgres-policy &&
       mkdir -p /var/run/sshd && 
       service ssh start && 
       service postgresql start && 
@@ -21,8 +33,8 @@ services:
       echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/16/main/pg_hba.conf && 
       service postgresql restart && 
       su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD '\''k'\'';\"" && 
-      su - postgres -c "psql -c \"CREATE DATABASE PUNE;\"" &&
-      su - postgres -c "psql -U postgres -d pune -c \"CREATE SCHEMA pune_user;\"" &&
+      su - postgres -c "psql -c \"CREATE DATABASE pune;\"" &&
+      su - postgres -c "psql -d pune -c \"CREATE SCHEMA IF NOT EXISTS pune_user;\"" &&
       tail -f /dev/null
       '
 
@@ -32,14 +44,26 @@ services:
     hostname: ansible 
     tty: true
     restart: unless-stopped
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Kolkata 
+    volumes:
+      - ansible_data:/var/lib/ansible
     command: >
       bash -c '
+      sed -i "s|http://|https://|g" /etc/apt/sources.list.d/* &&
       apt-get update -y && 
-      apt-get install -y iputils-ping vim curl wget net-tools openssh-server software-properties-common python-is-python3 sudo python3-psycopg2 && 
-      add-apt-repository --yes --update ppa:ansible/ansible && 
-      apt install -y ansible && 
-      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server sshpass python3 software-properties-common python-is-python3 sudo python3-psycopg2 ansible && 
+      add-apt-repository --yes --update ppa:ansible/ansible &&
+      id -u kayyum >/dev/null 2>&1 || useradd -m  -s /bin/bash kayyum && 
+      id -u jenkins >/dev/null 2>&1 || useradd -m  -s /bin/bash jenkins &&
+      id -u postgres >/dev/null 2>&1 || useradd -m  -s /bin/bash postgres &&
+      echo "root:k" | chpasswd &&
       echo "kayyum:k" | chpasswd && 
+      echo "jenkins:k" | chpasswd &&
+      echo "postgres:k" | chpasswd &&
+      echo "kayyum ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/kayyum-policy &&
+      chmod 440 /etc/sudoers.d/kayyum-policy &&
       mkdir -p /var/run/sshd && 
       service ssh start && 
       tail -f /dev/null
@@ -50,18 +74,106 @@ services:
     container_name: jenkins
     hostname: jenkins
     restart: on-failure
+    user: root 
     ports:
       - "8080:8080"
       - "50000:50000"
       - "2224:22"
+    environment:
+      JAVA_HOME: /opt/java/openjdk
+      PATH: /opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - jenkins_home:/var/jenkins_home
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 gosu python-is-python3 sudo python3-psycopg2 && 
+      id -u kayyum >/dev/null 2>&1 || useradd -m  -s /bin/bash kayyum && 
+      id -u jenkins >/dev/null 2>&1 || useradd -m  -s /bin/bash jenkins &&
+      id -u postgres >/dev/null 2>&1 || useradd -m  -s /bin/bash postgres &&
+      echo "root:k" | chpasswd &&
+      echo "kayyum:k" | chpasswd && 
+      echo "jenkins:k" | chpasswd &&
+      echo "postgres:k" | chpasswd &&
+      echo "jenkins ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jenkins-policy &&
+      chmod 440 /etc/sudoers.d/jenkins-policy &&
+      mkdir -p /var/jenkins_home/.ssh &&
+      chown -R jenkins:jenkins /var/jenkins_home &&
+      chmod 755 -R /var/jenkins_home && 
+      chmod 700 /var/jenkins_home/.ssh &&
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      su -p jenkins -c "/usr/bin/tini -s -- /usr/local/bin/jenkins.sh"
+      '
 
 volumes:
   jenkins_home:
+  postgres_data:
+  ansible_data:
 
-# in jenkins after docker container ready to use do below things
-# useradd -m kayyum; passwd kayyum ---> k
-# useradd -m postgres; passwd postgres --> k ; apt update -y ; 
+
+# Below steps taken cared by adding above commands don't execute below 
+# for i in kayyum postgres; do useradd -m -s 
+# echo "kayyum:k" | chpasswd && 
+# echo "jenkins:k" | chpasswd &&
+# echo "postgres:k" | chpasswd &&
+# apt update -y ; 
 # apt install -y iputils-ping vim curl wget net-tools openssh-server
 # root# service ssh start 
+# apt update -y && apt install -y iputils-ping vim curl wget net-tools openssh-server python3 on jenkins 
+#echo "jenkins ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username-policy &&
+#sudo chmod 440 /etc/sudoers.d/username-policy &&
+
+### very important execute below
+# ssh-keygen -t ed25519 
+# make sure to id_ed25519.pub >> authorized_keys; chmod 600 authorized_keys for all servers on every server 
+# otherwise ssh won't work with ansible and jenkins remote command also not work 
+###### Do below on ansible server as kayyum user 
+# kayyum@ansible:~/.ssh$ ls -lrt
+# total 20
+# -rw-r--r-- 1 kayyum kayyum   96 Sep  9 05:26 id_ed25519.pub
+# -rw------- 1 kayyum kayyum  411 Sep  9 05:26 id_ed25519
+# -rw------- 1 kayyum kayyum    0 Sep  9 05:32 authorized_keys
+# -rw------- 1 kayyum kayyum 2098 Sep  9 05:35 known_hosts.old
+# -rw------- 1 kayyum kayyum 2934 Sep  9 05:35 known_hosts
+# -rw------- 1 kayyum kayyum  157 Sep  9 05:40 config
+# kayyum@ansible:~/.ssh$ 
+# kayyum@ansible:~/.ssh$ 
+# kayyum@ansible:~/.ssh$ cat config
+# Host ansible
+#     HostName ansible
+#     User kayyum
+
+# Host postgres
+#     HostName postgres
+#     User postgres
+
+# Host jenkins
+#     HostName jenkins
+#     User jenkins
+# kayyum@ansible:~/.ssh$ for server in ansible postgres jenkins ; do ssh -tq ${server} "(cat ~/.ssh/id_ed25519.pub)"; done
+# kayyum@ansible's password: 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJf/g+2XN9sC0GKjbODCveHCzVplA+cVyah2jekY5syG kayyum@ansible
+# postgres@postgres's password: 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkSqjsVa/Hn0FElYEa6u2az9PCtQtFLhjhz/T/hgYtI postgres@postgres
+# jenkins@jenkins's password: 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILIkbK6Mut8KqF+Yzihp8oF/7Cuz/1QaflQAZs22hl7u jenkins@jenkins
+# kayyum@ansible:~/.ssh$ 
+# paste above keys in authorized_keys and then scp to all servers 
+# kayyum@ansible:~/.ssh$ cat authorized_keys 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJf/g+2XN9sC0GKjbODCveHCzVplA+cVyah2jekY5syG kayyum@ansible
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkSqjsVa/Hn0FElYEa6u2az9PCtQtFLhjhz/T/hgYtI postgres@postgres
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILIkbK6Mut8KqF+Yzihp8oF/7Cuz/1QaflQAZs22hl7u jenkins@jenkins
+# kayyum@ansible:~/.ssh$ for server in postgres jenkins; do scp authorized_keys ${server}:~/.ssh/; done
+# authorized_keys                                                   100%  292    52.0KB/s   00:00    
+# authorized_keys                                                   100%  292   230.3KB/s   00:00 
+# ssh-copy-id kayyum@postgres; ssh-copy-id kayyum@jenkins ---> ansible server
+# ssh-copy-id jenkins@ansible; ssh-copy-id jenkins@postgres ---> jenkins server
+# ssh-copy-id postgres@ansible; ssh-copy-id postgres@jenkins ---> postgres server 
+
+
+# for postgres db use below for jenkins workspace query.sql
+# create table if not exists pune_table(id serial primary key, locality varchar(200) unique);
+# insert into pune_table(locality) values ('yerwada'),('pune station'),('kalyani nagar'),('bhekrai nagar'),('hadapsar'),('viman nagar'),('khadki'),('kondhwa'),('wakad'),('lohegaon'),('koregaon park'),('hinjewadi'),('man gaon'),('pimpri chinchwad') on conflict (locality) do nothing;
+# select * from pune_table;
+# remember to do all above steps
