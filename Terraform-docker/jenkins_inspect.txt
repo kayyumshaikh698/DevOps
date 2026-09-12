@@ -1,0 +1,308 @@
+[
+    {
+        "Id": "39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2",
+        "Created": "2026-09-09T06:02:04.780573798Z",
+        "Path": "/usr/bin/tini",
+        "Args": [
+            "--",
+            "/usr/local/bin/jenkins.sh",
+            "bash",
+            "-c",
+            " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 gosu python-is-python3 sudo python3-psycopg2 \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 id -u postgres \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash postgres \u0026\u0026 echo \"root:k\" | chpasswd \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"jenkins ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/jenkins-policy \u0026\u0026 chmod 440 /etc/sudoers.d/jenkins-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  su -p jenkins -c \"/usr/bin/tini -s -- /usr/local/bin/jenkins.sh\" tail -f /dev/null "
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 38202,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-09-09T06:02:05.131065283Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:c1e4c349365f6d16d88595b2c5f7e8ff39b8ae1d061f62420bac193b4b9616d0",
+        "ResolvConfPath": "/var/lib/docker/containers/39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2/hostname",
+        "HostsPath": "/var/lib/docker/containers/39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2/hosts",
+        "LogPath": "/var/lib/docker/containers/39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2/39deb3b1299e21299e33ac5a82450fd387f784481a11e930ba9629ae486b07c2-json.log",
+        "Name": "/jenkins",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "terraform-docker_jenkins_home:/var/jenkins_home:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "terraform-docker_default",
+            "PortBindings": {
+                "22/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "2224"
+                    }
+                ],
+                "50000/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "50000"
+                    }
+                ],
+                "8080/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "on-failure",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "terraform-docker_jenkins_home",
+                "Source": "/var/lib/docker/volumes/terraform-docker_jenkins_home/_data",
+                "Destination": "/var/jenkins_home",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "jenkins",
+            "Domainname": "",
+            "User": "root",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "22/tcp": {},
+                "50000/tcp": {},
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=C.UTF-8",
+                "JENKINS_HOME=/var/jenkins_home",
+                "JENKINS_SLAVE_AGENT_PORT=50000",
+                "REF=/usr/share/jenkins/ref",
+                "JENKINS_UC=https://updates.jenkins.io",
+                "JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental",
+                "JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals",
+                "COPY_REFERENCE_FILE_LOG=/var/jenkins_home/copy_reference_file.log",
+                "JENKINS_VERSION=2.568.3"
+            ],
+            "Cmd": [
+                "bash",
+                "-c",
+                " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 gosu python-is-python3 sudo python3-psycopg2 \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 id -u postgres \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash postgres \u0026\u0026 echo \"root:k\" | chpasswd \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"jenkins ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/jenkins-policy \u0026\u0026 chmod 440 /etc/sudoers.d/jenkins-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  su -p jenkins -c \"/usr/bin/tini -s -- /usr/local/bin/jenkins.sh\" tail -f /dev/null "
+            ],
+            "Image": "jenkins/jenkins:lts",
+            "Volumes": {
+                "/var/jenkins_home": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/usr/bin/tini",
+                "--",
+                "/usr/local/bin/jenkins.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "7829e4d9cc2bb900402c121d9b987264dd0e3eba5e80a83fd49606806978fbfe",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:c1e4c349365f6d16d88595b2c5f7e8ff39b8ae1d061f62420bac193b4b9616d0",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "terraform-docker",
+                "com.docker.compose.project.config_files": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker\\postgres_ansible_jenkins_compose.yml",
+                "com.docker.compose.project.working_dir": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker",
+                "com.docker.compose.service": "jenkins",
+                "com.docker.compose.version": "5.1.4",
+                "org.opencontainers.image.description": "The Jenkins Continuous Integration and Delivery server",
+                "org.opencontainers.image.licenses": "MIT",
+                "org.opencontainers.image.revision": "bb25c48ab0fef2900e85339b00a0bef333b94854",
+                "org.opencontainers.image.source": "https://github.com/jenkinsci/docker",
+                "org.opencontainers.image.title": "Official Jenkins Docker image",
+                "org.opencontainers.image.url": "https://www.jenkins.io/",
+                "org.opencontainers.image.vendor": "Jenkins project",
+                "org.opencontainers.image.version": "2.568.3"
+            },
+            "StopTimeout": 1
+        },
+        "NetworkSettings": {
+            "SandboxID": "6f1d228aa6467e6d78e83fcc84da8bb287e81b7f8f08cd5931817de42ae25f1f",
+            "SandboxKey": "/var/run/docker/netns/6f1d228aa646",
+            "Ports": {
+                "22/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "2224"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "2224"
+                    }
+                ],
+                "50000/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "50000"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "50000"
+                    }
+                ],
+                "8080/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "8080"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "8080"
+                    }
+                ]
+            },
+            "Networks": {
+                "terraform-docker_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "jenkins",
+                        "jenkins"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "169d7896d961ee1187956424f057ce67cd8efce93dedff4d4e6f5789e1c4e7a0",
+                    "EndpointID": "b3c9ac26b662070e8b380e7623dfd5e51d167cc9fc11f3af6dd3523f5aab5f2f",
+                    "Gateway": "172.18.0.1",
+                    "IPAddress": "172.18.0.3",
+                    "MacAddress": "f2:94:40:48:a5:2d",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "jenkins",
+                        "39deb3b1299e"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:68964c38dbb70c0bf6adff480d6dda2e1191d2d07e076c9fd2996345303eb999",
+            "size": 2578,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

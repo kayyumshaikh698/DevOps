@@ -1,0 +1,215 @@
+[
+    {
+        "Id": "e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870",
+        "Created": "2026-09-09T06:02:04.723965719Z",
+        "Path": "bash",
+        "Args": [
+            "-c",
+            " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 software-properties-common python-is-python3 sudo python3-psycopg2 \u0026\u0026  add-apt-repository --yes --update ppa:ansible/ansible \u0026\u0026  apt-get install -y ansible \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 id -u postgres \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash postgres \u0026\u0026 echo \"root:k\" | chpasswd \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"kayyum ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/kayyum-policy \u0026\u0026 chmod 440 /etc/sudoers.d/kayyum-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  tail -f /dev/null "
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 38204,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-09-09T06:02:05.08930067Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+        "ResolvConfPath": "/var/lib/docker/containers/e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870/hostname",
+        "HostsPath": "/var/lib/docker/containers/e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870/hosts",
+        "LogPath": "/var/lib/docker/containers/e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870/e0ee4312bdababddf4349758624da2668f584b7bc57c89d8835a084a0b5e1870-json.log",
+        "Name": "/ansible",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "terraform-docker_default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "ansible",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": true,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "bash",
+                "-c",
+                " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 software-properties-common python-is-python3 sudo python3-psycopg2 \u0026\u0026  add-apt-repository --yes --update ppa:ansible/ansible \u0026\u0026  apt-get install -y ansible \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 id -u postgres \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash postgres \u0026\u0026 echo \"root:k\" | chpasswd \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"kayyum ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/kayyum-policy \u0026\u0026 chmod 440 /etc/sudoers.d/kayyum-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  tail -f /dev/null "
+            ],
+            "Image": "kayyum/ubuntu-minimal:latest",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "b452e8939fdd35b6da68c9281049aa50b54a000cc9e4b1752771583897754485",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "terraform-docker",
+                "com.docker.compose.project.config_files": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker\\postgres_ansible_jenkins_compose.yml",
+                "com.docker.compose.project.working_dir": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker",
+                "com.docker.compose.service": "ansible",
+                "com.docker.compose.version": "5.1.4",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.version": "24.04"
+            },
+            "StopTimeout": 1
+        },
+        "NetworkSettings": {
+            "SandboxID": "d78eaf9be52967cacccf0f9195436a7c6bea968c2d8974a27db37dad2d697060",
+            "SandboxKey": "/var/run/docker/netns/d78eaf9be529",
+            "Ports": {},
+            "Networks": {
+                "terraform-docker_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ansible",
+                        "ansible"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "169d7896d961ee1187956424f057ce67cd8efce93dedff4d4e6f5789e1c4e7a0",
+                    "EndpointID": "a7af8a1e013e10b04ec26201b420b2abacba9f51e492fc7ed69dc42d098de707",
+                    "Gateway": "172.18.0.1",
+                    "IPAddress": "172.18.0.2",
+                    "MacAddress": "a2:9b:25:06:f2:be",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ansible",
+                        "e0ee4312bdab"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+            "digest": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+            "size": 741,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

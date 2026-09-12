@@ -1,0 +1,253 @@
+[
+    {
+        "Id": "cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22",
+        "Created": "2026-09-09T06:02:04.727472507Z",
+        "Path": "bash",
+        "Args": [
+            "-c",
+            " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"postgres ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/postgres-policy \u0026\u0026 chmod 440 /etc/sudoers.d/postgres-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  service postgresql start \u0026\u0026  echo \"listen_addresses = '*'\" \u003e\u003e /etc/postgresql/16/main/postgresql.conf \u0026\u0026  echo \"host all all 0.0.0.0/0 scram-sha-256\" \u003e\u003e /etc/postgresql/16/main/pg_hba.conf \u0026\u0026  service postgresql restart \u0026\u0026  su - postgres -c \"psql -c \\\"ALTER USER postgres WITH PASSWORD 'k';\\\"\" \u0026\u0026  su - postgres -c \"psql -c \\\"CREATE DATABASE pune;\\\"\" \u0026\u0026 su - postgres -c \"psql -d pune -c \\\"CREATE SCHEMA IF NOT EXISTS pune_user;\\\"\" \u0026\u0026 tail -f /dev/null "
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 38203,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-09-09T06:02:05.102897262Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+        "ResolvConfPath": "/var/lib/docker/containers/cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22/hostname",
+        "HostsPath": "/var/lib/docker/containers/cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22/hosts",
+        "LogPath": "/var/lib/docker/containers/cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22/cfd2d967e356b52cd6d658ab9b46a30f4adcf1a8eaddef07fdb17a6239e72d22-json.log",
+        "Name": "/postgres",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "terraform-docker_default",
+            "PortBindings": {
+                "22/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "2222"
+                    }
+                ],
+                "5432/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "5432"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "postgres",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "22/tcp": {},
+                "5432/tcp": {}
+            },
+            "Tty": true,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "bash",
+                "-c",
+                " apt-get update -y \u0026\u0026  apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev \u0026\u0026  id -u kayyum \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash kayyum \u0026\u0026  id -u jenkins \u003e/dev/null 2\u003e\u00261 || useradd -m -s /bin/bash jenkins \u0026\u0026 echo \"kayyum:k\" | chpasswd \u0026\u0026  echo \"jenkins:k\" | chpasswd \u0026\u0026 echo \"postgres:k\" | chpasswd \u0026\u0026 echo \"postgres ALL=(ALL) NOPASSWD:ALL\" \u003e /etc/sudoers.d/postgres-policy \u0026\u0026 chmod 440 /etc/sudoers.d/postgres-policy \u0026\u0026 mkdir -p /var/run/sshd \u0026\u0026  service ssh start \u0026\u0026  service postgresql start \u0026\u0026  echo \"listen_addresses = '*'\" \u003e\u003e /etc/postgresql/16/main/postgresql.conf \u0026\u0026  echo \"host all all 0.0.0.0/0 scram-sha-256\" \u003e\u003e /etc/postgresql/16/main/pg_hba.conf \u0026\u0026  service postgresql restart \u0026\u0026  su - postgres -c \"psql -c \\\"ALTER USER postgres WITH PASSWORD 'k';\\\"\" \u0026\u0026  su - postgres -c \"psql -c \\\"CREATE DATABASE pune;\\\"\" \u0026\u0026 su - postgres -c \"psql -d pune -c \\\"CREATE SCHEMA IF NOT EXISTS pune_user;\\\"\" \u0026\u0026 tail -f /dev/null "
+            ],
+            "Image": "kayyum/ubuntu-minimal:latest",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "4fa16e1e51970d77f98a58e3aa3ecd052841790baf50de6f0c2fabe46b216269",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "terraform-docker",
+                "com.docker.compose.project.config_files": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker\\postgres_ansible_jenkins_compose.yml",
+                "com.docker.compose.project.working_dir": "C:\\Users\\kayyu\\OneDrive\\Desktop\\GIT\\Terraform-docker",
+                "com.docker.compose.service": "postgres",
+                "com.docker.compose.version": "5.1.4",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.version": "24.04"
+            },
+            "StopTimeout": 1
+        },
+        "NetworkSettings": {
+            "SandboxID": "3682f871404dfd78f4b1415f9fd015996765fcbc0823d3bfdb093da4f4cab34b",
+            "SandboxKey": "/var/run/docker/netns/3682f871404d",
+            "Ports": {
+                "22/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "2222"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "2222"
+                    }
+                ],
+                "5432/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "5432"
+                    },
+                    {
+                        "HostIp": "::",
+                        "HostPort": "5432"
+                    }
+                ]
+            },
+            "Networks": {
+                "terraform-docker_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "postgres",
+                        "postgres"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "169d7896d961ee1187956424f057ce67cd8efce93dedff4d4e6f5789e1c4e7a0",
+                    "EndpointID": "3a9ac37bef5d761599e361bb1ff4ea0ca2437dcd2fcb6753bfae20ec4297912c",
+                    "Gateway": "172.18.0.1",
+                    "IPAddress": "172.18.0.4",
+                    "MacAddress": "d6:38:e1:f3:92:ca",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "postgres",
+                        "cfd2d967e356"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+            "digest": "sha256:263287cfe42d36b84107bbb01129646e9f8b660f7cf40d329cae2ec0fb369831",
+            "size": 741,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]
