@@ -11,12 +11,11 @@ Welcome to my central repository for **DevOps, Cloud-Native Engineering, and Inf
 ## 📂 Repository Structure
 
 ```text
-├── .github/workflows/       # CI/CD Pipeline definitions (GitHub Actgggions)
-├──Terraform-docker/        # Dockerfiles and containerization setups
-├── kubernetes/              # K8s manifests, deployments, and helm charts
-├── terraform/               # Infrastructure as Code (IaC) modules and scripts
-├── scripts/                 # Automation and utility shell/Python scripts
-└── docs/                    # Architecture diagrams and configuration guides
+├── .github/workflows/                               # CI/CD Pipeline definitions (GitHub Actgggions)
+├── Terraform-docker/                                # Dockerfiles and containerization setups with terraform main.tf file
+|                                                    # docker compose consists of container definitions for postgres, ansible, grafana and jenkins
+├── 03sep2026_ansible_postgres_project/              # ansible playbooks  
+└──.                                                 # sample scripts and files *.jpg, *.sql, *.yml, *.ini *.txt
 
 How to run ansible, jenkins and postgres containers:
 cd /Terraform-docker
