@@ -11,9 +11,16 @@ Welcome to my central repository for **DevOps, Cloud-Native Engineering, and Inf
 ## 📂 Repository Structure
 
 ```text
-├── .github/workflows/       # CI/CD Pipeline definitions (GitHub Actions)
-├── docker/                  # Dockerfiles and containerization setups
+├── .github/workflows/       # CI/CD Pipeline definitions (GitHub Actgggions)
+├──Terraform-docker/        # Dockerfiles and containerization setups
 ├── kubernetes/              # K8s manifests, deployments, and helm charts
 ├── terraform/               # Infrastructure as Code (IaC) modules and scripts
 ├── scripts/                 # Automation and utility shell/Python scripts
 └── docs/                    # Architecture diagrams and configuration guides
+
+How to run ansible, jenkins and postgres containers:
+cd /Terraform-docker
+terraform init
+terraform play
+terraform apply --auto-approve
+terraform destroy --auto-approve
