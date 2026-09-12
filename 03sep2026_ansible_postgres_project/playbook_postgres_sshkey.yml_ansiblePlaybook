@@ -1,0 +1,23 @@
+---
+- name: ansible playbook
+  hosts: postgres
+  gather_facts: yes
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: /var/lib/postgresql/.ssh
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0700'
+
+    - name: Generate SSH keypair on target machine
+      community.crypto.openssh_keypair:
+        path: /var/lib/postgresql/.ssh/id_ed25519
+        type: ed25519
+        size: 4096
+        owner: postgres
+        group: postgres
+        mode: '0600'

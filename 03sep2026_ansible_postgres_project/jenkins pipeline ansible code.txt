@@ -1,0 +1,59 @@
+Note---> just paste below donot change any default value 
+
+pipeline {
+    agent any
+    environment {
+        host = 'ansible'
+    }
+    stages {
+        stage('HOSTNAME') {
+            steps {
+                sh 'ssh -tq $host hostname -f'
+            }
+        }
+        stage('IPADDRESS') {
+            steps {
+                sh 'ssh -tq $host hostname -i'
+            }
+        }
+        stage('USER') {
+            steps {
+                sh 'ssh -tq $host whoami'
+            }
+        }
+        stage('ansible') {
+            steps {
+                // Connects directly using SSH keys as user kayyum
+                sh 'ssh -tq kayyum@$host "ansible-playbook -i /home/kayyum/inventory.ini /home/kayyum/playbook.yml"'
+            }
+        }
+    }
+}
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++ GIT HUB REPO CLONE ++++++++++++++++++++++++++++++++++++++++
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                // Get code from a GitHub repository
+                git branch: 'devops', url: 'https://github.com/kayyumshaikh698/DevOps.git'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'cat sample.txt'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo Deployed'
+            }
+        }
+    }
+}
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
