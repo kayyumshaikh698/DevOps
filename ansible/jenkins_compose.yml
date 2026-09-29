@@ -1,0 +1,43 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: /dockerfiles/jenkins.yml
+    image: kayyum/kayyum_jenkins:latest 
+    container_name: jenkins
+    hostname: jenkins
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.30
+    restart: on-failure
+    user: root 
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      - "2224:22"
+    environment:
+      JAVA_HOME: /opt/java/openjdk
+      PATH: /opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    command: >
+      bash -c '
+      chown -R jenkins:jenkins /var/jenkins_home &&
+      chmod 755 /var/jenkins_home &&
+      service ssh start && 
+      su -p jenkins -c "/usr/bin/tini -s -- /usr/local/bin/jenkins.sh"
+      '
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  jenkins_home:
+
+
+# docker compose -f jenkins_compose.yml up --build -d
+# next time : docker compose -f jenkins_compose.yml up -d 
