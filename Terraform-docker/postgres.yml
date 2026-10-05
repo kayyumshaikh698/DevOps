@@ -1,0 +1,29 @@
+services: 
+    postgres:
+      image: postgres:16
+      container_name: postgres
+      hostname: postgres 
+      networks:
+        app_net:
+          ipv4_address: 172.28.0.10
+      tty: true
+      restart: unless-stopped
+      environment:
+        - DEBIAN_FRONTEND=noninteractive
+        - TZ=Asia/Kolkata
+        - POSTGRES_PASSWORD=k
+        - POSTGRES_DB=pune
+      ports:
+        - "5432:5432"
+        - "2222:22"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

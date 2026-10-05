@@ -1,0 +1,52 @@
+services:
+  ansible:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: ansible
+    hostname: ansible 
+    tty: true
+    restart: unless-stopped
+    command: >
+      bash -c "apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server && 
+      apt install software-properties-common -y &&
+      apt install python-is-python3 &&
+      add-apt-repository --yes --update ppa:ansible/ansible &&
+      apt install ansible -y &&
+      apt install -y sudo python3-psycopg2 &&
+      useradd -m -s /bin/bash kayyum && 
+      echo 'kayyum:k' | chpasswd && 
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      exec bash"
+
+  postgres:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: postgres
+    hostname: postgres
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+      - "2222:22"
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server software-properties-common postgresql postgresql-contrib postgresql-server-dev-all libpq-dev && 
+      add-apt-repository --yes --update ppa:ansible/ansible && 
+      apt-get install -y ansible && 
+      apt install python-is-python3 &&
+      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      echo "kayyum:k" | chpasswd && 
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      service postgresql start && 
+      echo "listen_addresses = '\''*'\''" >> /etc/postgresql/16/main/postgresql.conf && 
+      echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/16/main/pg_hba.conf && 
+      apt install -y sudo python3-psycopg2 &&
+      service postgresql restart && 
+      echo 'postgres:k' | chpasswd &&
+      su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD '\''k'\'';\"" && 
+      su - postgres -c "psql -c \"CREATE DATABASE PUNE;\"" &&
+      su - postgres -c "psql -U postgres -d pune -c \"CREATE SCHEMA pune_user;\"" &&
+      tail -f /dev/null
+      '

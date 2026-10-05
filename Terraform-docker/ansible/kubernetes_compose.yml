@@ -1,0 +1,49 @@
+services:
+  k8s-cluster-node:
+    build:
+      context: .
+      dockerfile: /dockerfiles/kubernetes.yml
+    image: kayyum/kubernetes:latest 
+    container_name: kubernetes
+    hostname: kubernetes
+    privileged: true # Required to run Docker-in-Docker / Kind
+    stdin_open: true
+    tty: true
+    ports: 
+      - "6443:6443"
+    networks:
+      kubectl_net:
+        ipv4_address: 172.31.0.30
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Talk to host Docker daemon
+      - k8s_data:/root/.kube                       # Persists your kubectl configs and cluster info
+      - docker_data:/var/lib/docker                # Persists Docker-in-Docker node state (optional, but enables full node persistence)
+volumes:
+  k8s_data:
+  docker_data:
+
+networks:
+  kubectl_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+
+# steps after container up and running 
+# root: chmod +x /usr/local/bin/kind
+# root : kind create cluster --name local-cluster # create cluster if not exists 
+# root: kubectl cluster-info --context kind-local-cluster # check if cluster running finely 
+# error: To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+# The connection to the server 127.0.0.1:38431 was refused - did you specify the right host or port?
+# root : To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+# The connection to the server 172.31.0.30:6443 was refused - did you specify the right host or port?
+# root@kubernetes:~# docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' local-cluster-control-plane
+# 172.18.0.2
+# root@kubernetes:~# kubectl config set-cluster kind-local-cluster --server=https://172.18.0.2:6443
+# Cluster "kind-local-cluster" set.
+# root@kubernetes:~# kubectl cluster-info --context kind-local-cluster
+# Kubernetes control plane is running at https://172.18.0.2:6443
+# CoreDNS is running at https://172.18.0.2:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+# To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+# root: kubectl get nodes
+# kind delete cluster --name local-cluster

@@ -1,0 +1,19 @@
+# Terraform local execution state / cache
+**/.terraform/
+*.tfstate
+*.tfstate.*
+
+# Sensitive credentials & private keys
+*.pem
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Terraform variables containing secrets (optional)
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

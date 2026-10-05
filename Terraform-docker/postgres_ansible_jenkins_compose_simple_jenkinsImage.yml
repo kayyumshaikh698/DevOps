@@ -1,0 +1,95 @@
+services:
+  postgres:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: postgres
+    hostname: postgres 
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+      - "2222:22"
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev && 
+      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      id -u jenkins >/dev/null 2>&1 || useradd -m -s /bin/bash jenkins &&
+      echo "kayyum:k" | chpasswd && 
+      echo "jenkins:k" | chpasswd &&
+      echo "postgres:k" | chpasswd &&
+      echo "postgres ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/postgres-policy &&
+      chmod 440 /etc/sudoers.d/postgres-policy &&
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      service postgresql start && 
+      echo "listen_addresses = '\''*'\''" >> /etc/postgresql/16/main/postgresql.conf && 
+      echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/16/main/pg_hba.conf && 
+      service postgresql restart && 
+      su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD '\''k'\'';\"" && 
+      su - postgres -c "psql -c \"CREATE DATABASE pune;\"" &&
+      su - postgres -c "psql -d pune -c \"CREATE SCHEMA IF NOT EXISTS pune_user;\"" &&
+      tail -f /dev/null
+      '
+
+  ansible:
+    image: kayyum/ubuntu-minimal:latest
+    container_name: ansible
+    hostname: ansible 
+    tty: true
+    restart: unless-stopped
+    command: >
+      bash -c '
+      apt-get update -y && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 software-properties-common python-is-python3 sudo python3-psycopg2 && 
+      add-apt-repository --yes --update ppa:ansible/ansible && 
+      apt-get install -y ansible && 
+      id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
+      id -u jenkins >/dev/null 2>&1 || useradd -m -s /bin/bash jenkins &&
+      id -u postgres >/dev/null 2>&1 || useradd -m -s /bin/bash postgres &&
+      echo "root:k" | chpasswd &&
+      echo "kayyum:k" | chpasswd && 
+      echo "jenkins:k" | chpasswd &&
+      echo "postgres:k" | chpasswd &&
+      echo "kayyum ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/kayyum-policy &&
+      chmod 440 /etc/sudoers.d/kayyum-policy &&
+      mkdir -p /var/run/sshd && 
+      service ssh start && 
+      tail -f /dev/null
+      '
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins
+    restart: on-failure
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      - "2224:22"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+volumes:
+  jenkins_home:
+
+
+# in jenkins after docker container ready to use do below things
+# echo "kayyum:k" | chpasswd && 
+# echo "jenkins:k" | chpasswd &&
+# echo "postgres:k" | chpasswd &&
+# apt update -y ; 
+# apt install -y iputils-ping vim curl wget net-tools openssh-server
+# root# service ssh start 
+# apt update -y && apt install -y iputils-ping vim curl wget net-tools openssh-server python3 on jenkins 
+#echo "jenkins ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username-policy &&
+#sudo chmod 440 /etc/sudoers.d/username-policy &&
+
+### very important 
+# make sure to id_ed25519.pub >> authorized_keys; chmod 600 authorized_keys for all servers on every server 
+# otherwise ssh won't work with ansible and jenkins remote command also not work 
+
+# for postgres db use below for jenkins workspace query.sql
+# create table if not exists pune_table(id serial primary key, locality varchar(200) unique);
+# insert into pune_table(locality) values ('yerwada'),('pune station'),('kalyani nagar'),('bhekrai nagar'),('hadapsar'),('viman nagar'),('khadki'),('kondhwa'),('wakad'),('lohegaon'),('koregaon park'),('hinjewadi'),('man gaon'),('pimpri chinchwad') on conflict (locality) do nothing;
+# select * from pune_table;
+# remember to do all above steps

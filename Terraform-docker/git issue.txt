@@ -1,0 +1,23 @@
+PS C:\Users\kayyu\OneDrive\Desktop\GIT\Terraform-docker> git commit -m 'changed 100'
+Enumerating objects: 445, done.
+Counting objects: 100% (445/445), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (406/406), done.
+Writing objects: 100% (445/445), done.
+Total 445 (delta 207), reused 0 (delta 0), pack-reused 0 (from 0)
+Enumerating cruft objects: 1, done.
+Traversing cruft objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Deletion of directory '.git/objects/00' failed. Should I try again? (y/n) 
+Sorry, I did not understand your answer. Please type 'y' or 'n'
+Deletion of directory '.git/objects/00' failed. Should I try again? (y/n)
+
+To configure Git to stop trying to run automatic background cleanups (which triggers the OneDrive file-locking error), make sure you are in your main project folder (C:\Users\kayyu\OneDrive\Desktop\GIT\Terraform-docker) and run this command:
+# disabling git auto cleanup
+git config --local gc.auto 0  
+# manually cleanup git 
+git gc --prune=now
+# enabling git auto cleanup 
+git config --unset gc.auto

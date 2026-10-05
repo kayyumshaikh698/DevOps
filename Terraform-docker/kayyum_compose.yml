@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: postgres:kayyum
+    container_name: postgres
+    hostname: postgres 
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.10
+    tty: true
+    restart: unless-stopped
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Kolkata 
+    ports:
+      - "5432:5432"
+      - "2222:22"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    
+  ansible:
+    image: ansible:kayyum
+    container_name: ansible
+    hostname: ansible 
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.20
+    tty: true
+    restart: unless-stopped
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Kolkata 
+    volumes:
+      - ansible_data:/var/lib/ansible
+    
+  jenkins:
+    image: jenkins:kayyum
+    container_name: jenkins
+    hostname: jenkins
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.30
+    restart: on-failure
+    user: root 
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      - "2224:22"
+    environment:
+      JAVA_HOME: /opt/java/openjdk
+      PATH: /opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    
+volumes:
+  jenkins_home:
+  postgres_data:
+  ansible_data:
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

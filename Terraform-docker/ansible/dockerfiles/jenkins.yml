@@ -1,0 +1,47 @@
+FROM jenkins/jenkins:lts
+
+# Switch to root to install packages and configure system users
+USER root
+
+# Update and install required utilities, SSH, and Python packages
+RUN apt-get update -y && \
+    apt-get install -y \
+    iputils-ping \
+    vim \
+    curl \
+    wget \
+    net-tools \
+    openssh-server \
+    python3 \
+    sshpass \
+    gosu \
+    python-is-python3 \
+    sudo \
+    python3-psycopg2 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create users if they don't exist and set passwords
+RUN id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && \
+    id -u jenkins >/dev/null 2>&1 || useradd -m -s /bin/bash jenkins && \
+    id -u postgres >/dev/null 2>&1 || useradd -m -s /bin/bash postgres && \
+    echo "root:k" | chpasswd && \
+    echo "kayyum:k" | chpasswd && \
+    echo "jenkins:k" | chpasswd && \
+    echo "postgres:k" | chpasswd
+
+# Configure passwordless sudo for jenkins
+RUN echo "jenkins ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/jenkins-policy && \
+    chmod 440 /etc/sudoers.d/jenkins-policy
+
+# Prepare directories and set proper permissions for jenkins home and SSH
+RUN mkdir -p /var/jenkins_home/.ssh && \
+    mkdir -p /var/run/sshd && \
+    chown -R jenkins:jenkins /var/jenkins_home && \
+    chmod 755 -R /var/jenkins_home && \
+    chmod 700 /var/jenkins_home/.ssh
+
+# Expose SSH daemon port inside the image
+EXPOSE 22
+
+# Keep user as root so the entrypoint/command can start ssh service
+USER root

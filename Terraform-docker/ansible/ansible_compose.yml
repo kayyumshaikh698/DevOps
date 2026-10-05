@@ -1,0 +1,42 @@
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: /dockerfiles/ansible.yml
+    image: kayyum/kayyum_ansible:latest
+    container_name: ansible
+    hostname: ansible 
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.20
+    tty: true
+    restart: unless-stopped
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+      - TZ=Asia/Kolkata 
+    volumes:
+      - ansible_data:/var/lib/ansible
+    ports:
+      - "2223:22" # Optional: map SSH port to host if needed
+    command: >
+      bash -c '
+      mkdir -p /var/lib/kayyum &&
+      id -u kayyum >/dev/null 2>&1 && usermod -d /var/lib/ansible/kayyum -m kayyum || true &&
+      chown -R kayyum:kayyum /var/lib/ansible/kayyum &&
+      service ssh start && 
+      tail -f /dev/null
+      '
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  ansible_data:
+
+
+# docker compose -f ansible_compose.yml up --build -d
+# next time: docker compose -f ansible_compose.yml up  -d

@@ -1,8 +1,11 @@
 services:
   postgres:
-    image: kayyum/ubuntu-minimal:latest
+    image: ubuntu:noble-20260911
     container_name: postgres
     hostname: postgres 
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.10
     tty: true
     restart: unless-stopped
     environment:
@@ -15,9 +18,16 @@ services:
       - postgres_data:/var/lib/postgresql
     command: >
       bash -c '
-      sed -i "s|http://|https://|g" /etc/apt/sources.list.d/* &&
-      apt-get update -y && 
-      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev && 
+      apt-get clean &&
+      rm -f /etc/apt/sources.list && 
+      rm -rf /var/lib/apt/lists/* &&
+      echo "deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse" > /etc/apt/sources.list &&
+      echo "deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list &&
+      echo "deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list &&
+      apt-get update -y &&
+      apt-get install -y ca-certificates software-properties-common &&
+      apt-get update -y &&
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 sshpass python-is-python3 sudo software-properties-common postgresql postgresql-contrib libpq-dev && 
       id -u kayyum >/dev/null 2>&1 || useradd -m -s /bin/bash kayyum && 
       id -u jenkins >/dev/null 2>&1 || useradd -m -s /bin/bash jenkins &&
       id -u postgres >/dev/null 2>&1 || useradd -m -s /bin/bash postgres &&
@@ -33,15 +43,18 @@ services:
       echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/16/main/pg_hba.conf && 
       service postgresql restart && 
       su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD '\''k'\'';\"" && 
-      su - postgres -c "psql -c \"CREATE DATABASE pune;\"" &&
+      su - postgres -c "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='pune'\"" | grep -q 1 || su - postgres -c "psql -c \"CREATE DATABASE pune;\"" &&     
       su - postgres -c "psql -d pune -c \"CREATE SCHEMA IF NOT EXISTS pune_user;\"" &&
       tail -f /dev/null
       '
 
   ansible:
-    image: kayyum/ubuntu-minimal:latest
+    image: ubuntu:noble-20260911
     container_name: ansible
     hostname: ansible 
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.20
     tty: true
     restart: unless-stopped
     environment:
@@ -51,8 +64,13 @@ services:
       - ansible_data:/var/lib/ansible
     command: >
       bash -c '
-      sed -i "s|http://|https://|g" /etc/apt/sources.list.d/* &&
-      apt-get update -y && 
+      apt-get clean &&
+      rm -f /etc/apt/sources.list && 
+      rm -rf /var/lib/apt/lists/* &&
+      echo "deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse" > /etc/apt/sources.list &&
+      echo "deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse" >> /etc/apt/sources.list &&
+      echo "deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse" >> /etc/apt/sources.list &&
+      apt-get update -y &&
       apt-get install -y iputils-ping vim curl wget net-tools openssh-server sshpass python3 software-properties-common python-is-python3 sudo python3-psycopg2 ansible && 
       add-apt-repository --yes --update ppa:ansible/ansible &&
       id -u kayyum >/dev/null 2>&1 || useradd -m  -s /bin/bash kayyum && 
@@ -73,6 +91,9 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     hostname: jenkins
+    networks:
+      app_net:
+        ipv4_address: 172.28.0.30
     restart: on-failure
     user: root 
     ports:
@@ -87,7 +108,7 @@ services:
     command: >
       bash -c '
       apt-get update -y && 
-      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 gosu python-is-python3 sudo python3-psycopg2 && 
+      apt-get install -y iputils-ping vim curl wget net-tools openssh-server python3 sshpass gosu python-is-python3 sudo python3-psycopg2 && 
       id -u kayyum >/dev/null 2>&1 || useradd -m  -s /bin/bash kayyum && 
       id -u jenkins >/dev/null 2>&1 || useradd -m  -s /bin/bash jenkins &&
       id -u postgres >/dev/null 2>&1 || useradd -m  -s /bin/bash postgres &&
@@ -111,7 +132,75 @@ volumes:
   postgres_data:
   ansible_data:
 
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
 
+
+## final steps for passwordless ssh and seamless access for every user ##
+# 1) playbook_ansible_sshkey.yml_ansiblePlaybook
+#    playbook_jenkins_sshkey.yml_ansiblePlaybook
+#    playbook_postgres_sshkey.yml_ansiblePlaybook
+# 2) kayyum@ansible ; postgres@postgres ; jenkins@jenkins :-
+#    add below in config file
+  #  $ cat ~/.ssh/config
+  #  Host *
+  #  StrictHostKeyChecking no
+  #  UserKnownHostsFile /dev/null
+# 3) Execute below on respective servers 
+# # ssh-copy-id kayyum@postgres; ssh-copy-id kayyum@jenkins ---> ansible server
+# # ssh-copy-id jenkins@ansible; ssh-copy-id jenkins@postgres ---> jenkins server
+# # ssh-copy-id postgres@ansible; ssh-copy-id postgres@jenkins ---> postgres server 
+# 4) First execute on each server :
+# for server in kayyum@ansible jenkins@jenkins postgres@postgres;do sshpass -p 'k' ssh -tq $server "cat ~/.ssh/id_ed25519.pub" >> ~/.ssh/authorized_keys ; done;
+# 5) test passwordless ssh server 
+# 6) Execute below only on Jenkins server as jenkins@jenkins for passwordless ssh and pipeline jobs:
+# for server in kayyum@postgres kayyum@jenkins jenkins@ansible jenkins@postgres postgres@ansible postgres@jenkins kayyum@ansible jenkins@jenkins postgres@postgres;do sshpass -p 'k' ssh-copy-id $server ; done
+
+# # add below on every container 
+# cat << 'EOF' >> ~/.ssh/config
+# Host *
+#     StrictHostKeyChecking no
+#     UserKnownHostsFile /dev/null
+# EOF
+
+# for ansible server now
+# inventory.ini for ansible host user as kayyum
+# ansible ansible_host=172.28.0.20 ansible_user=kayyum ansible_ssh_pass='k'
+# postgres ansible_host=172.28.0.10 ansible_user=postgres ansible_ssh_pass='k'
+# jenkins ansible_host=172.28.0.30 ansible_user=jenkins ansible_ssh_pass='k'
+# sudo mkdir -p /etc/ansible
+# sudo tee /etc/ansible/ansible.cfg << 'EOF'
+# [defaults]
+# # to stop ssh errors
+# host_key_checking = False
+# # to stop python errors
+# interpreter_python = auto_silent
+# # to stop deprecation warning
+# deprecation_warnings = False
+# EOF
+# cat /etc/ansible/ansible.cfg 
+#
+# add alias for ansible :-
+# echo "alias ansible='ansible-playbook -i inventory.ini'" >> ~/.bashrc && source ~/.bashrc 
+#-------------------------------------------------------------------------------------------------------
+#        passwordless-ssh on jenkins server for all username on all servers for jenkins CI/CD pipeline
+#--------------------------------------------------------------------------------------------------------
+#
+# then run below on jenkins server
+# for server in kayyum@postgres kayyum@jenkins jenkins@ansible jenkins@postgres postgres@ansible postgres@jenkins kayyum@ansible jenkins@jenkins postgres@postgres;do sshpass -p 'k' ssh-copy-id $server ; done
+# jenkins@jenkins:~$ for server in kayyum@ansible jenkins@jenkins postgres@postgres;do sshpass -p 'k' ssh -tq $server "cat ~/.ssh/id_ed25519.pub" >> ~/.ssh/authorized_keys ; done;
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZx49rsvw0qNCF7JITuq9/Pz+bqGC9di3NFQzRuMHRF 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHtvl/YDMWB+o5k9h1LX6GMgiA9+wQ1aBOydd7y50U9K 
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOsMZ5ICG1Coeimkm3hhH5dByDWdbwhKIZp3T7SSXhO 
+# paste above public keys on each server 
+# vim /home/kayyum/.ssh/authorized_keys ---> ansible 
+# vim /var/lib/postgresql/.ssh/authorized_keys ---->postgres 
+# vim /var/jenkins_home/.ssh/authorized_keys -----> jenkins 
+#***********************************************************************************************************************************************************************************************
 # Below steps taken cared by adding above commands don't execute below 
 # for i in kayyum postgres; do useradd -m -s 
 # echo "kayyum:k" | chpasswd && 
@@ -139,18 +228,6 @@ volumes:
 # -rw------- 1 kayyum kayyum  157 Sep  9 05:40 config
 # kayyum@ansible:~/.ssh$ 
 # kayyum@ansible:~/.ssh$ 
-# kayyum@ansible:~/.ssh$ cat config
-# Host ansible
-#     HostName ansible
-#     User kayyum
-
-# Host postgres
-#     HostName postgres
-#     User postgres
-
-# Host jenkins
-#     HostName jenkins
-#     User jenkins
 # kayyum@ansible:~/.ssh$ for server in ansible postgres jenkins ; do ssh -tq ${server} "(cat ~/.ssh/id_ed25519.pub)"; done
 # kayyum@ansible's password: 
 # ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJf/g+2XN9sC0GKjbODCveHCzVplA+cVyah2jekY5syG kayyum@ansible
