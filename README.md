@@ -12,8 +12,9 @@ Welcome to my central repository for **DevOps, Cloud-Native Engineering, and Inf
 
 ```text
 ├── .github/workflows/                               # CI/CD Pipeline definitions (GitHub Actgggions)
-├── Terraform-docker/                                # Dockerfiles and containerization setups with terraform main.tf file
-|                                                    # docker compose consists of container definitions for postgres, ansible, grafana and jenkins
+├── Terraform-docker/                                # Dockerfiles and containerization setups with terraform main.tf file (resource_type                                                           # "terraform_data" "docker_compose" to use provision "local-exec" 
+├── Terraform-docker/ansible/                        # terraform-docker>ansible contains docker compose files of ansible,postgres, jenkins
+├── Terraform-docker/ansible/dockerfile              # dockerfiles consists of container definitions for postgres, ansible, grafana and                                                             # jenkins
 ├── 03sep2026_ansible_postgres_project/              # ansible playbooks  
 └──.                                                 # sample scripts and files *.jpg, *.sql, *.yml, *.ini *.txt
 
